@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Skills {
+  id              Int     @id @default(autoincrement())
+  name            String  @db.VarChar(2000)
+  icon            String  @default("default.svg") @db.VarChar(2000)
+  showOnPortfolio Boolean @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Errors {
+  id      Int      @id @default(autoincrement())
+  message String   @db.VarChar(10000)
+  ip      String?  @db.VarChar(100)
+  time    DateTime @default(now()) @db.Timestamp(6)
+  path    String?  @db.VarChar(200)
+  method  String?  @db.VarChar(100)
+  isHttp  Boolean?
+  stack   String?  @db.VarChar(50000)
+}
+
