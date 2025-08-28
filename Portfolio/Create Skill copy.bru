@@ -4,10 +4,18 @@ meta {
   seq: 3
 }
 
-post {
-  url: http://localhost:3000/skills/update
-  body: none
+patch {
+  url: http://localhost:3000/skills/1
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name":"Nest JS",
+    "icon":"nest.svg",
+    "showOnPortfolio":false
+  }
 }
 
 settings {

@@ -1,0 +1,89 @@
+{
+  "data": [
+    {
+      "name": "HTML",
+      "icon": "html.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "CSS",
+      "icon": "css.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Javascript",
+      "icon": "js.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Typescript",
+      "icon": "ts.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Nest JS",
+      "icon": "nest.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Express JS",
+      "icon": "express.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "React",
+      "icon": "react.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "AWS",
+      "icon": "aws.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Docker",
+      "icon": "docker.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "MongoDB",
+      "icon": "mongo.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Node JS",
+      "icon": "node.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "PostgreSQL",
+      "icon": "postgres.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Prisma",
+      "icon": "prisma.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Redis",
+      "icon": "redis.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "Socket.io",
+      "icon": "socketio.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "SQL Server",
+      "icon": "sqlserver.svg",
+      "showOnPortfolio": false
+    },
+    {
+      "name": "WebRTC",
+      "icon": "webrtc.svg",
+      "showOnPortfolio": false
+    }
+  ]
+}

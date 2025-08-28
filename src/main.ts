@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import 'colors';
 import { GlobalExceptionsRecorderFilter } from './common/filters/global-exceptions-recorder.filter';
 import { PrismaService } from 'prisma/prisma.service';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   //! Password is a must , therefore it should be set
@@ -16,8 +17,17 @@ async function bootstrap() {
   //! ==============================================
 
   const app = await NestFactory.create(AppModule);
+  //! Global Exception Filter
   app.useGlobalFilters(
     new GlobalExceptionsRecorderFilter(app.get(PrismaService)),
+  );
+  //! Global Validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
   );
   await app.listen(process.env.PORT ?? 3000);
 }
