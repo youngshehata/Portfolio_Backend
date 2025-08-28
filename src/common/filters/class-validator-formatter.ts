@@ -1,7 +1,7 @@
 // this function gonna take exception on the global filter and if its coming from class validator it gonna format it
 // as the rest of exceptions with CustomHttpException
 
-import { Response } from '@common/types/response.type';
+import { TResponse } from '@common/types/response.type';
 
 export const classValidatorFormatter = (exception: any) => {
   const message = exception.response?.message;
@@ -15,7 +15,7 @@ export const classValidatorFormatter = (exception: any) => {
     return false;
   }
 
-  const response: Response = {
+  const response: TResponse = {
     data: null,
     message: message[0],
     statusCode: 400,

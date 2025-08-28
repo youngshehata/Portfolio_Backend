@@ -16,6 +16,10 @@ export abstract class AbstractRepo<
     return this.delegate.create(args);
   }
 
+  updateOne(args: Parameters<TDelegate['update']>[0]) {
+    return this.delegate.update(args)[0];
+  }
+
   update(args: Parameters<TDelegate['update']>[0]) {
     return this.delegate.update(args);
   }

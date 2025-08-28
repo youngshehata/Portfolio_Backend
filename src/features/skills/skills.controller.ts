@@ -7,12 +7,24 @@ export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   @Post()
-  create(@Body() data: CreateSkillDto) {
-    return this.skillsService.create(data);
+  async create(@Body() data: CreateSkillDto) {
+    return await this.skillsService.create(data);
   }
 
   @Patch('/:id')
-  update(@Param('id') id: number, @Body() data: UpdateSkillDto) {
-    return this.skillsService.update(id, data);
+  async update(@Param('id') id: number, @Body() data: UpdateSkillDto) {
+    const updated = await this.skillsService.update(id, data);
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    console.log('FIX THIS');
+    return updated;
   }
 }

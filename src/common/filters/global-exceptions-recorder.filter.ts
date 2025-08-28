@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { Response } from '@common/types/response.type';
+import { TResponse } from '@common/types/response.type';
 import { classValidatorFormatter } from './class-validator-formatter';
 
 @Catch()
@@ -36,7 +36,7 @@ export class GlobalExceptionsRecorderFilter implements ExceptionFilter {
       // log it to console as well
       console.log(errorRecord);
 
-      const serverResponse: Response = {
+      const serverResponse: TResponse = {
         data: null,
         message: (exception as Error).message,
         statusCode: status,
@@ -48,7 +48,7 @@ export class GlobalExceptionsRecorderFilter implements ExceptionFilter {
         return response.status(status).send(isClassValidatorError);
       }
 
-      const serverResponse: Response = {
+      const serverResponse: TResponse = {
         data: null,
         message: (exception as Error).message,
         statusCode: status,

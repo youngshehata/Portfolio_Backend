@@ -35,7 +35,7 @@ export class SkillsService implements OnModuleInit {
   }
 
   async update(id: number, data: UpdateSkillDto) {
-    return await this.skillRepo.update({
+    return await this.skillRepo.updateOne({
       where: { id },
       data,
     });
