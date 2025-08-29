@@ -6,7 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, from, throwError } from 'rxjs';
+import { Observable, defer, from, throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { LogsService } from 'src/features/logs/logs.service';
 import { polishLog } from '@common/helpers/polish-log';
@@ -45,30 +45,15 @@ export class LoggerInterceptor implements NestInterceptor {
         ),
       ),
       catchError((err) =>
-        from(
-          (async () => {
-            await this.loggingService.createLog(
-              `Error on ${method} ${url}: ${err.message}`,
-              'ERROR',
-              ip,
-            );
-            return throwError(() => err);
-          })(),
-        ),
+        defer(async () => {
+          await this.loggingService.createLog(
+            `Error on ${method} ${url}: ${err.message}`,
+            'ERROR',
+            ip,
+          );
+          throw err;
+        }),
       ),
-    );
-  }
-
-  /**
-   * ✅ Type guard for TResponse check
-   */
-  private isTResponse(obj: any): obj is TResponse {
-    return (
-      obj &&
-      typeof obj === 'object' &&
-      'statusCode' in obj &&
-      'message' in obj &&
-      'data' in obj
     );
   }
 }

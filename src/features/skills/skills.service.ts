@@ -2,11 +2,13 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { SkillRepo } from './skills.repo';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { seederToData } from '@common/helpers/seeder-to-data';
+import { PaginationFilter } from '@common/types/pagination.dto';
 
 @Injectable()
 export class SkillsService implements OnModuleInit {
   constructor(private readonly skillRepo: SkillRepo) {}
 
+  //! ================================================= SEEDING =================================================
   async onModuleInit() {
     const data = await seederToData<CreateSkillDto>('skills');
     // Check if skills already seeded
@@ -30,18 +32,23 @@ export class SkillsService implements OnModuleInit {
     }
   }
 
+  //! ================================================= Find Many =================================================
+  async findMany(query: PaginationFilter) {
+    const data = await this.skillRepo.findMany({}, query.pageSize, query.page);
+    return data;
+  }
+
+  //! ================================================= CREATE =================================================
   async create(data: CreateSkillDto) {
     return await this.skillRepo.create({ data });
   }
 
+  //! ================================================= UPDATE =================================================
   async update(id: number, data: UpdateSkillDto) {
-    return await this.skillRepo.updateOne({
+    const updatedSkill = await this.skillRepo.updateOne({
       where: { id },
       data,
     });
-  }
-
-  async findOne() {
-    return await this.skillRepo.delete({ where: { id: 1 } });
+    return updatedSkill;
   }
 }

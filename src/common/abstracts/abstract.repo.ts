@@ -1,3 +1,9 @@
+import {
+  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGE_SIZE,
+} from '@common/constraints/constraints.common';
+import { HttpException } from '@nestjs/common';
+
 export abstract class AbstractRepo<
   TDelegate extends {
     findMany: (...args: any[]) => any;
@@ -8,23 +14,66 @@ export abstract class AbstractRepo<
 > {
   constructor(protected readonly delegate: TDelegate) {}
 
-  findMany(args?: Parameters<TDelegate['findMany']>[0]) {
-    return this.delegate.findMany(args);
+  //! ===============================>   FindMany   <===============================
+  findMany(
+    args?: Parameters<TDelegate['findMany']>[0],
+    pageSize: number = DEFAULT_PAGE_SIZE,
+    pageNumber: number = DEFAULT_PAGE_NUMBER,
+  ): ReturnType<TDelegate['findMany']> {
+    try {
+      return this.delegate.findMany({
+        ...args,
+        take: Number(pageSize),
+        skip: Number((pageNumber - 1) * pageSize),
+      });
+    } catch (error) {
+      if (error.meta?.cause) {
+        throw new HttpException(error.meta.cause, 400);
+      }
+      throw error;
+    }
   }
 
-  create(args: Parameters<TDelegate['create']>[0]) {
-    return this.delegate.create(args);
+  //! ===============================>   Create   <===============================
+  create(
+    args: Parameters<TDelegate['create']>[0],
+  ): ReturnType<TDelegate['create']> {
+    try {
+      return this.delegate.create(args);
+    } catch (error) {
+      if (error.meta?.cause) {
+        throw new HttpException(error.meta.cause, 400);
+      }
+      throw error;
+    }
   }
 
-  updateOne(args: Parameters<TDelegate['update']>[0]) {
-    return this.delegate.update(args)[0];
+  //! ===============================>   Update One   <===============================
+  async updateOne(
+    args: Parameters<TDelegate['update']>[0],
+  ): Promise<ReturnType<TDelegate['update']>> {
+    try {
+      const result = await this.delegate.update(args);
+      return result;
+    } catch (error) {
+      if (error.meta?.cause) {
+        throw new HttpException(error.meta.cause, 400);
+      }
+      throw error;
+    }
   }
 
-  update(args: Parameters<TDelegate['update']>[0]) {
-    return this.delegate.update(args);
-  }
-
-  delete(args: Parameters<TDelegate['delete']>[0]) {
-    return this.delegate.delete(args);
+  //! ===============================>   Delete One   <===============================
+  delete(
+    args: Parameters<TDelegate['delete']>[0],
+  ): ReturnType<TDelegate['delete']> {
+    try {
+      return this.delegate.delete(args);
+    } catch (error) {
+      if (error.meta?.cause) {
+        throw new HttpException(error.meta.cause, 400);
+      }
+      throw error;
+    }
   }
 }
