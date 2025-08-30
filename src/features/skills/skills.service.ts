@@ -37,6 +37,11 @@ export class SkillsService implements OnModuleInit {
     const data = await this.skillRepo.findMany({}, query.pageSize, query.page);
     return data;
   }
+  //! ================================================= Find One =================================================
+  async findOne(id: number) {
+    const data = await this.skillRepo.findOne({ where: { id } });
+    return data;
+  }
 
   //! ================================================= CREATE =================================================
   async create(data: CreateSkillDto) {
@@ -61,5 +66,10 @@ export class SkillsService implements OnModuleInit {
       'image',
     );
     return updated;
+  }
+
+  //! ================================================= DELETE =================================================
+  async delete(id: number) {
+    return await this.skillRepo.delete({ where: { id } });
   }
 }

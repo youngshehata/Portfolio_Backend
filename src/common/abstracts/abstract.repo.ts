@@ -39,11 +39,16 @@ export abstract class AbstractRepo<
   }
 
   //! ===============================>   FIND ONE   <===============================
-  findOne(
+  async findOne(
     args: Parameters<TDelegate['findUnique']>[0],
-  ): ReturnType<TDelegate['findUnique']> {
+  ): Promise<ReturnType<TDelegate['findUnique']>> {
     try {
-      return this.delegate.findUnique(args);
+      // return this.delegate.findUnique(args);
+      const found = await this.delegate.findUnique(args);
+      if (!found) {
+        throw new HttpException('Entity Not found', 404);
+      }
+      return found;
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);
@@ -167,11 +172,15 @@ export abstract class AbstractRepo<
   }
 
   //! ===============================>   Delete One   <===============================
-  delete(
+  async delete(
     args: Parameters<TDelegate['delete']>[0],
-  ): ReturnType<TDelegate['delete']> {
+  ): Promise<ReturnType<TDelegate['delete']>> {
     try {
-      return this.delegate.delete(args);
+      const deleted = await this.delegate.delete(args);
+      if (!deleted) {
+        throw new HttpException('Entity Not found', 404);
+      }
+      return deleted;
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);

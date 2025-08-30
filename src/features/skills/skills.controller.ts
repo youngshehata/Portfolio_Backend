@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -21,9 +23,15 @@ export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   //! ================================================= FIND MANY =================================================
-  @Get('/find')
+  @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
     return await this.skillsService.findMany(query);
+  }
+  //! ================================================= FIND ONE =================================================
+  @Get('/one/:id')
+  async findOne(@Param('id') id: string) {
+    if (!id) throw new HttpException('id is required', 400);
+    return await this.skillsService.findOne(+id);
   }
   //! ================================================= CREATE =================================================
   @Post()
@@ -35,6 +43,12 @@ export class SkillsController {
   @Patch('/:id')
   async update(@Param('id') id: string, @Body() data: UpdateSkillDto) {
     const updated = await this.skillsService.update(+id, data);
+    return updated;
+  }
+  //! ================================================= DELETE =================================================
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    const updated = await this.skillsService.delete(+id);
     return updated;
   }
   //! ============================================= EDIT with ICON =============================================
