@@ -44,14 +44,13 @@ export class SkillsController {
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
     @Body('type') type: string,
-    @Body('name') name: string,
-    @Body('showOnPortfolio') showOnPortfolio: boolean,
+    @Body() body: Omit<UpdateSkillDto, 'icon'>,
   ) {
     const data: Record<string, any> = {};
     if (file) data.icon = file.filename;
-    if (name) data.name = name;
-    if (typeof showOnPortfolio !== 'undefined')
-      data.showOnPortfolio = showOnPortfolio;
+    if (body.name) data.name = body.name;
+    if (typeof body.showOnPortfolio !== 'undefined')
+      data.showOnPortfolio = body.showOnPortfolio;
 
     const updated = await this.skillsService.updateWithIcon(
       {
