@@ -7,12 +7,14 @@ import { PrismaService } from 'prisma/prisma.service';
 import { LogsModule } from './features/logs/logs.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from '@common/interceptors/logger-interceptor/logger.interceptor';
+import { PersonalModule } from './features/personal/personal.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     SkillsModule,
     LogsModule,
+    PersonalModule,
   ],
   controllers: [AppController],
   providers: [

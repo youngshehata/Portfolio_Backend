@@ -4,6 +4,7 @@ import 'colors';
 import { GlobalExceptionsRecorderFilter } from './common/filters/global-exceptions-recorder.filter';
 import { PrismaService } from 'prisma/prisma.service';
 import { ValidationPipe } from '@nestjs/common';
+import { logInvalidPersonalData } from './features/personal/helpers/invalid-personal-data';
 
 async function bootstrap() {
   //! Password is a must , therefore it should be set
@@ -15,7 +16,6 @@ async function bootstrap() {
     process.exit(1);
   }
   //! ==============================================
-
   const app = await NestFactory.create(AppModule);
   //! Global Exception Filter
   app.useGlobalFilters(

@@ -41,3 +41,12 @@ model Logs_Types {
   type String @db.VarChar(100)
   Logs Logs[]
 }
+
+model Personal {
+  id    Int    @id @default(autoincrement()) @db.SmallInt
+  name  String @db.VarChar(200)
+  title String @db.VarChar(300)
+  image String @db.VarChar(500)
+  about String @db.VarChar(10000)
+  cv    String @db.VarChar(500)
+}
