@@ -51,4 +51,15 @@ export class SkillsService implements OnModuleInit {
     });
     return updatedSkill;
   }
+
+  //! ================================================= UPDATE WITH ICON =================================================
+  async updateWithIcon(args: any, file: Express.Multer.File, type: string) {
+    const updated = await this.skillRepo.updateWithIcon(
+      args,
+      file,
+      type,
+      'image',
+    );
+    return updated;
+  }
 }
