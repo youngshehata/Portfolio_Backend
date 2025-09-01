@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   Patch,
   Put,
   UploadedFile,
@@ -34,5 +33,12 @@ export class PersonalController {
   @UseInterceptors(FileInterceptor('file', multerValidations.documents))
   async editCV(@UploadedFile() file: Express.Multer.File) {
     return await this.personalService.editCV(file);
+  }
+
+  //! ================= EDIT (IMAGE) =================
+  @Put('image')
+  @UseInterceptors(FileInterceptor('file', multerValidations.images))
+  async editImage(@UploadedFile() file: Express.Multer.File) {
+    return await this.personalService.editImage(file);
   }
 }

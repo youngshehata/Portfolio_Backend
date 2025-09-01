@@ -67,4 +67,20 @@ export class PersonalService implements OnModuleInit {
       data: { cv: uploaded },
     });
   }
+
+  //! ================= UPDATE IMAGE =================
+  async editImage(file: Express.Multer.File) {
+    const oldImage = (await this.personalRepo.getPersonalData()).image;
+    const uploaded = await this.uploadService.uploadFile(
+      file,
+      'Image',
+      'personal',
+      `personal/${oldImage}`,
+      'Image',
+    );
+    return await this.personalRepo.updateOne({
+      where: { id: 1 },
+      data: { image: uploaded },
+    });
+  }
 }

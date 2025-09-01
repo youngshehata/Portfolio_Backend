@@ -1,0 +1,19 @@
+meta {
+  name: Edit Image
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/personal/image
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(D:\Work\Pics\7c02d8361f7acd759f197fcb243b0800.jpg)
+}
+
+settings {
+  encodeUrl: true
+}

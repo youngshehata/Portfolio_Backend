@@ -26,6 +26,11 @@ export class UploadService {
       return true;
     }
   }
+  //?============================== Helper Function ==================================
+  private getFileName(fullPath: string) {
+    const fileName = path.basename(fullPath);
+    return fileName;
+  }
 
   //?==================================================================================
   async uploadFile(
@@ -35,7 +40,6 @@ export class UploadService {
     oldFileToDelete: string | null,
     imageSize?: imageSize,
   ) {
-    console.log(imageSize);
     // ===========> Store file path in variable for multiple uses
     let filePath: string | null = null;
 
@@ -74,7 +78,13 @@ export class UploadService {
             throw new HttpException(err.message, 500);
           }
         });
-        if (oldFileToDelete) {
+        if (
+          oldFileToDelete &&
+          this.getFileName(oldFileToDelete) !==
+            this.getFileName(`${type}/${file.originalname}`)
+          // document can have meaningful names, so to avoid adding Date.now() to it just check if same name dont delete
+          // because that may lead to delete the file just created as it has the same name
+        ) {
           await this.safeDelete(oldFileToDelete);
         }
 
