@@ -8,6 +8,7 @@ import { LogsModule } from './features/logs/logs.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from '@common/interceptors/logger-interceptor/logger.interceptor';
 import { PersonalModule } from './features/personal/personal.module';
+import { UploadService } from '@common/services/upload.service';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PersonalModule } from './features/personal/personal.module';
     AppService,
     PrismaService,
     { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
+    UploadService,
   ],
 })
 export class AppModule {}

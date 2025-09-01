@@ -19,13 +19,13 @@ export abstract class AbstractRepo<
   constructor(protected readonly delegate: TDelegate) {}
 
   //! ===============================>   FIND MANY   <===============================
-  findMany(
+  async findMany(
     args?: Parameters<TDelegate['findMany']>[0],
     pageSize: number = DEFAULT_PAGE_SIZE,
     pageNumber: number = DEFAULT_PAGE_NUMBER,
-  ): ReturnType<TDelegate['findMany']> {
+  ): Promise<ReturnType<TDelegate['findMany']>> {
     try {
-      return this.delegate.findMany({
+      return await this.delegate.findMany({
         ...args,
         take: Number(pageSize),
         skip: Number((pageNumber - 1) * pageSize),
@@ -58,11 +58,11 @@ export abstract class AbstractRepo<
   }
 
   //! ===============================>   Create   <===============================
-  create(
+  async create(
     args: Parameters<TDelegate['create']>[0],
-  ): ReturnType<TDelegate['create']> {
+  ): Promise<ReturnType<TDelegate['create']>> {
     try {
-      return this.delegate.create(args);
+      return await this.delegate.create(args);
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);

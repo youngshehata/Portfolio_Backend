@@ -1,0 +1,15 @@
+meta {
+  name: Get Personal Data
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/personal/data
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

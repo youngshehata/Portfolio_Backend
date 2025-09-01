@@ -7,4 +7,9 @@ export class PersonalRepo extends AbstractRepo<PrismaService['personal']> {
   constructor(private readonly prisma: PrismaService) {
     super(prisma.personal);
   }
+
+  async getPersonalData() {
+    const data = await this.findMany({}, 10, 1);
+    return data[0];
+  }
 }

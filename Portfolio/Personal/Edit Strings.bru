@@ -1,0 +1,23 @@
+meta {
+  name: Edit Strings
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:3000/personal/edit
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"Omar Shehata",
+    "title":"FullStack Web Developer",
+    "about":"Hi there im omar"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
