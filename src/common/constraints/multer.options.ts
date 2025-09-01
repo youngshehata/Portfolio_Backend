@@ -1,18 +1,35 @@
-const acceptedTypes = [
+const imagesAcceptedTypes = [
   'image/jpeg',
   'image/png',
   'image/svg+xml',
   'image/x-icon',
 ];
+
+const documentsAcceptedTypes = ['application/pdf'];
+
 export const multerValidations = {
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5MB
+  images: {
+    limits: {
+      fileSize: 1024 * 1024 * 10, // 10MB
+    },
+    fileFilter: (_, file, callback) => {
+      if (imagesAcceptedTypes.includes(file.mimetype)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
   },
-  fileFilter: (_, file, callback) => {
-    if (acceptedTypes.includes(file.mimetype)) {
-      callback(null, true);
-    } else {
-      callback(null, false);
-    }
+  documents: {
+    limits: {
+      fileSize: 1024 * 1024 * 20, // MB
+    },
+    fileFilter: (_, file, callback) => {
+      if (documentsAcceptedTypes.includes(file.mimetype)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
   },
 };

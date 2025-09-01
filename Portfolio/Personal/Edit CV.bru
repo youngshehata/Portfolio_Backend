@@ -1,0 +1,19 @@
+meta {
+  name: Edit CV
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:3000/personal/cv
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(D:\Work\Ahmed_Shehata_FS.pdf)
+}
+
+settings {
+  encodeUrl: true
+}

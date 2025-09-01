@@ -53,7 +53,7 @@ export class SkillsController {
   }
   //! ============================================= EDIT with ICON =============================================
   @Put('/icon/:id')
-  @UseInterceptors(FileInterceptor('file', multerValidations))
+  @UseInterceptors(FileInterceptor('file', multerValidations.images))
   async updateIcon(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,

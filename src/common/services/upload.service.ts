@@ -19,9 +19,11 @@ export class UploadService {
   }
 
   //?============================== Helper Function ==================================
-  private async safeDelete(file: string) {
-    if (fs.existsSync(file)) {
-      await fs.promises.unlink(file);
+  private async safeDelete(filePahtInsidePublic: string) {
+    const filePath = path.join(process.cwd(), 'public', filePahtInsidePublic);
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath);
+      return true;
     }
   }
 
@@ -57,47 +59,54 @@ export class UploadService {
       path.join(process.cwd(), 'public', savePathInsidePublic),
     );
 
-    //! *********************** CASE 1 : PDF FILE (Document) *************************
-    if (type == 'Document') {
-      filePath = path.join(
-        process.cwd(),
-        'public',
-        savePathInsidePublic,
-        file.filename,
-      );
-      fs.writeFile(filePath, file.buffer, (err) => {
-        if (err) {
-          throw new HttpException(err.message, 500);
+    try {
+      //! *********************** CASE 1 : PDF FILE (Document) *************************
+      if (type == 'Document') {
+        filePath = path.join(
+          process.cwd(),
+          'public',
+          savePathInsidePublic,
+          file.originalname,
+        );
+        fs.writeFile(filePath, file.buffer, (err) => {
+          if (err) {
+            throw new HttpException(err.message, 500);
+          }
+        });
+        if (oldFileToDelete) {
+          await this.safeDelete(oldFileToDelete);
         }
-        if (oldFileToDelete) this.safeDelete(oldFileToDelete);
-      });
 
-      return file.filename;
-    }
-
-    //! *********************** CASE 2 : IMAGE FILE (Icon || Image) *************************
-    else if (type == 'Image') {
-      const { width, height, quality } = IMAGE_CONFIG[imageSize!];
-
-      const ext = path.extname(file.originalname).toLowerCase();
-      const baseName = path.parse(file.originalname).name;
-      const fileName = `${Date.now()}-${baseName}${ext === '.svg' || ext === '.ico' ? ext : '.webp'}`;
-      filePath = path.join(
-        process.cwd(),
-        'public',
-        savePathInsidePublic,
-        fileName,
-      );
-      if (ext === '.svg' || ext === '.ico') {
-        // Keep original for SVG/ICO
-        await fs.promises.writeFile(filePath, file.buffer);
-      } else {
-        const processedImageBuffer = await sharp(file.buffer)
-          .resize(width, height, { fit: 'inside' })
-          .webp({ quality, alphaQuality: 100, effort: 4 })
-          .toBuffer();
-        await fs.promises.writeFile(filePath, processedImageBuffer);
+        return file.originalname;
       }
+
+      //! *********************** CASE 2 : IMAGE FILE (Icon || Image) *************************
+      else if (type == 'Image') {
+        const { width, height, quality } = IMAGE_CONFIG[imageSize!];
+
+        const ext = path.extname(file.originalname).toLowerCase();
+        const baseName = path.parse(file.originalname).name;
+        const fileName = `${Date.now()}-${baseName}${ext === '.svg' || ext === '.ico' ? ext : '.webp'}`;
+        filePath = path.join(
+          process.cwd(),
+          'public',
+          savePathInsidePublic,
+          fileName,
+        );
+        if (ext === '.svg' || ext === '.ico') {
+          // Keep original for SVG/ICO
+          await fs.promises.writeFile(filePath, file.buffer);
+        } else {
+          const processedImageBuffer = await sharp(file.buffer)
+            .resize(width, height, { fit: 'inside' })
+            .webp({ quality, alphaQuality: 100, effort: 4 })
+            .toBuffer();
+          await fs.promises.writeFile(filePath, processedImageBuffer);
+        }
+      }
+    } catch (err) {
+      if (filePath) await this.safeDelete(filePath);
+      throw err;
     }
   }
 }

@@ -4,12 +4,14 @@ import { logInvalidPersonalData } from './helpers/invalid-personal-data';
 import { defaultPersonalData } from './helpers/default-personal-data';
 import { PersonalUpdateDto } from './dtos/personal-update.dto';
 import { LogsService } from '../logs/logs.service';
+import { UploadService } from '@common/services/upload.service';
 
 @Injectable()
 export class PersonalService implements OnModuleInit {
   constructor(
     private readonly personalRepo: PersonalRepo,
     private readonly loggingService: LogsService,
+    private readonly uploadService: UploadService,
   ) {}
 
   //! ================= ON MODULE INIT =================
@@ -49,5 +51,20 @@ export class PersonalService implements OnModuleInit {
   //! ================= UPDATE PERSONAL DATA =================
   async editPersonalData(data: PersonalUpdateDto) {
     return await this.personalRepo.updateOne({ where: { id: 1 }, data });
+  }
+
+  //! ================= UPDATE CV =================
+  async editCV(file: Express.Multer.File) {
+    const oldCv = (await this.personalRepo.getPersonalData()).cv;
+    const uploaded = await this.uploadService.uploadFile(
+      file,
+      'Document',
+      'personal',
+      `personal/${oldCv}`,
+    );
+    return await this.personalRepo.updateOne({
+      where: { id: 1 },
+      data: { cv: uploaded },
+    });
   }
 }
