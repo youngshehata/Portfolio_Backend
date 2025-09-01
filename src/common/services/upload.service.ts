@@ -6,8 +6,8 @@ import * as sharp from 'sharp';
 export type fileTypes = 'Document' | 'Image';
 export type imageSize = 'Icon' | 'Image';
 export const IMAGE_CONFIG = {
-  icon: { width: 128, height: 128, quality: 80 },
-  image: { width: 1280, height: 720, quality: 100 },
+  Icon: { width: 128, height: 128, quality: 80 },
+  Image: { width: 1280, height: 720, quality: 100 },
 };
 @Injectable()
 export class UploadService {
@@ -35,6 +35,7 @@ export class UploadService {
     oldFileToDelete: string | null,
     imageSize?: imageSize,
   ) {
+    console.log(imageSize);
     // ===========> Store file path in variable for multiple uses
     let filePath: string | null = null;
 
@@ -103,6 +104,10 @@ export class UploadService {
             .toBuffer();
           await fs.promises.writeFile(filePath, processedImageBuffer);
         }
+        if (oldFileToDelete) {
+          await this.safeDelete(oldFileToDelete);
+        }
+        return fileName;
       }
     } catch (err) {
       if (filePath) await this.safeDelete(filePath);

@@ -59,11 +59,17 @@ export class SkillsService implements OnModuleInit {
 
   //! ================================================= UPDATE WITH ICON =================================================
   async updateWithIcon(args: any, file: Express.Multer.File, type: string) {
+    const oldFileToDelete = await this.skillRepo.findOne({
+      where: { id: args.where.id },
+    });
+
     const updated = await this.skillRepo.updateWithIcon(
       args,
       file,
       type,
-      'image',
+      type,
+      oldFileToDelete?.icon ? `${type}/${oldFileToDelete.icon}` : null,
+      'Icon',
     );
     return updated;
   }
