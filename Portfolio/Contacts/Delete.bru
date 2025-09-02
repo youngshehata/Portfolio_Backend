@@ -1,0 +1,15 @@
+meta {
+  name: Delete
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:3000/contacts/19
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

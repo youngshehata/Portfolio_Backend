@@ -1,0 +1,30 @@
+meta {
+  name: Edit with ICON
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:3000/contacts/icon/6
+  body: multipartForm
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"Fastify",
+    "icon":"ff.svg",
+    "showOnPortfolio":true
+  }
+}
+
+body:multipart-form {
+  name: UpdatedMethod
+  file: @file(D:\Work\Pics\8-remember-why-you-started-neon-sign.jpg)
+  type: contacts
+  value: +201111094505
+}
+
+settings {
+  encodeUrl: true
+}

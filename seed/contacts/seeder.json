@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "name": "Github",
+      "value": "https://github.com",
+      "icon": "github.svg",
+      "showOnPortfolio": false,
+      "showOnHome": false
+    },
+    {
+      "name": "LinkedIn",
+      "value": "https://linkedin.com",
+      "icon": "linkedin.svg",
+      "showOnPortfolio": false,
+      "showOnHome": false
+    },
+    {
+      "name": "Email",
+      "value": "test@example.com",
+      "icon": "email.svg",
+      "showOnPortfolio": false,
+      "showOnHome": false
+    },
+    {
+      "name": "Messenger",
+      "value": "https://messenger.com",
+      "icon": "messenger.svg",
+      "showOnPortfolio": false,
+      "showOnHome": false
+    },
+    {
+      "name": "WhatsApp",
+      "value": "https://whatsapp.com",
+      "icon": "whatsapp.svg",
+      "showOnPortfolio": false,
+      "showOnHome": false
+    }
+  ]
+}

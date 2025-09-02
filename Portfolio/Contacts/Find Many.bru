@@ -1,0 +1,20 @@
+meta {
+  name: Find Many
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3000/contacts/many?page=1&pageSize=10
+  body: json
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  pageSize: 10
+}
+
+settings {
+  encodeUrl: true
+}

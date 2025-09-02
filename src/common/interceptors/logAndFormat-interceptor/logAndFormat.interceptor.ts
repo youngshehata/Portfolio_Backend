@@ -12,7 +12,7 @@ import { LogsService } from 'src/features/logs/logs.service';
 import { polishLog } from '@common/helpers/polish-log';
 
 @Injectable()
-export class LoggerInterceptor implements NestInterceptor {
+export class LogAndFormatInterceptor implements NestInterceptor {
   constructor(private readonly loggingService: LogsService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

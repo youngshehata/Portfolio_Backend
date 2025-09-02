@@ -1,0 +1,25 @@
+meta {
+  name: Create Contact
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/contacts
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"Phone Calls",
+    "value":"+201092110413",
+    "icon":"express.svg",
+    "showOnHome":true,
+    "showOnContact":true
+  }
+}
+
+settings {
+  encodeUrl: true
+}

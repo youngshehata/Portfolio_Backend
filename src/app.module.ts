@@ -6,9 +6,10 @@ import { SkillsModule } from './features/skills/skills.module';
 import { PrismaService } from 'prisma/prisma.service';
 import { LogsModule } from './features/logs/logs.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggerInterceptor } from '@common/interceptors/logger-interceptor/logger.interceptor';
 import { PersonalModule } from './features/personal/personal.module';
 import { UploadService } from '@common/services/upload.service';
+import { LogAndFormatInterceptor } from '@common/interceptors/logAndFormat-interceptor/logAndFormat.interceptor';
+import { ContactsModule } from './features/contacts/contacts.module';
 
 @Module({
   imports: [
@@ -16,12 +17,13 @@ import { UploadService } from '@common/services/upload.service';
     SkillsModule,
     LogsModule,
     PersonalModule,
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     PrismaService,
-    { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: LogAndFormatInterceptor },
     UploadService,
   ],
 })
