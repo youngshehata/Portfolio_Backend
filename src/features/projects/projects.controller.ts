@@ -9,14 +9,11 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto, UpdateProjectDto } from './dtos/project.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { multerValidations } from '@common/constraints/multer.options';
+import { ProjectSkillDto } from './dtos/project-skill.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -33,10 +30,29 @@ export class ProjectsController {
     if (!id) throw new HttpException('id is required', 400);
     return await this.projectsService.findOne(+id);
   }
+  //! ====================================== FIND SKILLS FOR PROJECT ==========================================
+  @Get('/skills/:id')
+  async findSkills(@Param('id') id: string) {
+    if (!id) throw new HttpException('id is required', 400);
+    return await this.projectsService.findSkills(+id);
+  }
+
   //! ================================================= CREATE =================================================
   @Post()
   async create(@Body() data: CreateProjectDto) {
     return await this.projectsService.create(data);
+  }
+
+  //! ============================================== ADD SKILL ==============================================
+  @Post('skill')
+  async createSkill(@Body() data: ProjectSkillDto) {
+    return await this.projectsService.createSkill(data);
+  }
+
+  //! ============================================== DELETE SKILL ==============================================
+  @Delete('skill/:id')
+  async deleteSkill(@Param('id') id: string) {
+    return await this.projectsService.deleteSkill(+id);
   }
 
   //! ================================================= EDIT =================================================

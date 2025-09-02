@@ -8,6 +8,7 @@ export class PersonalRepo extends AbstractRepo<PrismaService['personal']> {
     super(prisma.personal);
   }
 
+  //! ================= GET PERSONAL DATA =================
   async getPersonalData() {
     const data = await this.findMany({}, 10, 1);
     return data[0];
