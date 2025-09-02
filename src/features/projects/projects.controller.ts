@@ -9,11 +9,15 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto, UpdateProjectDto } from './dtos/project.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
 import { ProjectSkillDto } from './dtos/project-skill.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerValidations } from '@common/constraints/multer.options';
 
 @Controller('projects')
 export class ProjectsController {
@@ -66,5 +70,15 @@ export class ProjectsController {
   async delete(@Param('id') id: string) {
     const updated = await this.projectsService.delete(+id);
     return updated;
+  }
+
+  //! =========================================== UPLOAD IMAGE ==============================================
+  @Put('image/:id')
+  @UseInterceptors(FileInterceptor('file', multerValidations.images))
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') id: string,
+  ) {
+    return await this.projectsService.uploadImage(file, +id);
   }
 }

@@ -55,10 +55,9 @@ export abstract class AbstractRepo<
     args: Parameters<TDelegate['findUnique']>[0],
   ): Promise<ReturnType<TDelegate['findUnique']>> {
     try {
-      // return this.delegate.findUnique(args);
       const found = await this.delegate.findUnique(args);
       if (!found) {
-        throw new HttpException('Entity Not found', 404);
+        throw new HttpException(`Entity Not found`, 404);
       }
       if (this.pathKey && this.PathEnvVariable) {
         return addCorrectPathToObject(

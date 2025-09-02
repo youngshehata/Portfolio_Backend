@@ -1,0 +1,26 @@
+meta {
+  name: Add Image to Project
+  type: http
+  seq: 9
+}
+
+put {
+  url: http://localhost:3000/projects/image/2
+  body: multipartForm
+  auth: inherit
+}
+
+body:json {
+  {
+    "projectId":2,
+    "skillId":55
+  }
+}
+
+body:multipart-form {
+  file: @file(D:\Work\Pics\4K-Drink-Mojito-Desktop-Wallpaper.jpg)
+}
+
+settings {
+  encodeUrl: true
+}

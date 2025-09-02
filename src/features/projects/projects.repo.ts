@@ -10,16 +10,20 @@ export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
   }
 
   //! ================= GET SKILLS FOR A PROJECT =================
-  async getSkills(id: number) {
-    try {
-      const skills = await this.prisma.projects_Images.findMany({
-        where: { project: id },
-      });
-      return skills;
-    } catch (error) {
-      //! CHECK IF PROJECT ID WRONG
-      console.log(error);
-    }
+  async getSkills(projectID: number) {
+    const skills = await this.prisma.projects_Skills.findMany({
+      where: { project: projectID },
+    });
+    if (skills.length === 0)
+      throw new BadRequestException('No skills are added to this project');
+    return skills;
+  }
+
+  //! ================= GET SKILLS FOR A PROJECT =================
+  async findOneProjectSkill(data: ProjectSkillDto) {
+    return await this.prisma.projects_Skills.findFirst({
+      where: { project: data.projectId, skill: data.skillId },
+    });
   }
 
   //! ================= ADD SKILL ====================
