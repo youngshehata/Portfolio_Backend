@@ -10,6 +10,7 @@ import { PersonalModule } from './features/personal/personal.module';
 import { UploadService } from '@common/services/upload.service';
 import { LogAndFormatInterceptor } from '@common/interceptors/logAndFormat-interceptor/logAndFormat.interceptor';
 import { ContactsModule } from './features/contacts/contacts.module';
+import { ProjectsModule } from './features/projects/projects.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ContactsModule } from './features/contacts/contacts.module';
     LogsModule,
     PersonalModule,
     ContactsModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [

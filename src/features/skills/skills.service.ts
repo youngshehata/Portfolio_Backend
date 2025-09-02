@@ -3,8 +3,6 @@ import { SkillRepo } from './skills.repo';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { seederToData } from '@common/helpers/seeder-to-data';
 import { PaginationFilter } from '@common/types/pagination.dto';
-import { addCorrectPathToObject } from '@common/helpers/add-correct-path';
-import { SKILLS_IMAGES_PATH } from '@common/constraints/images.paths';
 
 @Injectable()
 export class SkillsService implements OnModuleInit {
@@ -25,7 +23,6 @@ export class SkillsService implements OnModuleInit {
             name: skill.name,
             icon: skill.icon,
             showOnPortfolio: skill.showOnPortfolio,
-            updatedAt: new Date(), // only if not using @updatedAt
           },
         });
       }
@@ -37,9 +34,6 @@ export class SkillsService implements OnModuleInit {
   //! ================================================= Find Many =================================================
   async findMany(query: PaginationFilter) {
     const data = await this.skillRepo.findMany({}, query.pageSize, query.page);
-    // data.map((skill) =>
-    //   addCorrectPathToObject(skill, 'icon', SKILLS_IMAGES_PATH),
-    // );
     return data;
   }
   //! ================================================= Find One =================================================
