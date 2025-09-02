@@ -2,6 +2,7 @@ import {
   DEFAULT_PAGE_NUMBER,
   DEFAULT_PAGE_SIZE,
 } from '@common/constraints/constraints.common';
+import { addCorrectPathToObject } from '@common/helpers/add-correct-path';
 import { UploadService } from '@common/services/upload.service';
 import { HttpException, Inject } from '@nestjs/common';
 
@@ -14,7 +15,11 @@ export abstract class AbstractRepo<
     findUnique: (...args: any[]) => any;
   },
 > {
-  constructor(protected readonly delegate: TDelegate) {}
+  constructor(
+    protected readonly delegate: TDelegate,
+    private readonly pathKey?: string,
+    private readonly PathEnvVariable?: string,
+  ) {}
 
   @Inject(UploadService)
   protected uploadService: UploadService;
@@ -26,11 +31,17 @@ export abstract class AbstractRepo<
     pageNumber: number = DEFAULT_PAGE_NUMBER,
   ): Promise<ReturnType<TDelegate['findMany']>> {
     try {
-      return await this.delegate.findMany({
+      const data = await this.delegate.findMany({
         ...args,
         take: Number(pageSize),
         skip: Number((pageNumber - 1) * pageSize),
       });
+      if (this.pathKey && this.PathEnvVariable) {
+        data.map((entity) =>
+          addCorrectPathToObject(entity, this.pathKey!, this.PathEnvVariable!),
+        );
+      }
+      return data;
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);
@@ -49,6 +60,13 @@ export abstract class AbstractRepo<
       if (!found) {
         throw new HttpException('Entity Not found', 404);
       }
+      if (this.pathKey && this.PathEnvVariable) {
+        return addCorrectPathToObject(
+          found,
+          this.pathKey!,
+          this.PathEnvVariable!,
+        );
+      }
       return found;
     } catch (error) {
       if (error.meta?.cause) {
@@ -63,7 +81,15 @@ export abstract class AbstractRepo<
     args: Parameters<TDelegate['create']>[0],
   ): Promise<ReturnType<TDelegate['create']>> {
     try {
-      return await this.delegate.create(args);
+      const created = await this.delegate.create(args);
+      if (this.pathKey && this.PathEnvVariable) {
+        return addCorrectPathToObject(
+          created,
+          this.pathKey!,
+          this.PathEnvVariable!,
+        );
+      }
+      return created;
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);
@@ -78,6 +104,13 @@ export abstract class AbstractRepo<
   ): Promise<ReturnType<TDelegate['update']>> {
     try {
       const result = await this.delegate.update(args);
+      if (this.pathKey && this.PathEnvVariable) {
+        return addCorrectPathToObject(
+          result,
+          this.pathKey!,
+          this.PathEnvVariable!,
+        );
+      }
       return result;
     } catch (error) {
       if (error.meta?.cause) {
@@ -123,6 +156,13 @@ export abstract class AbstractRepo<
         data: { ...args.data, icon: uploadedFile },
       });
 
+      if (this.pathKey && this.PathEnvVariable) {
+        return addCorrectPathToObject(
+          updated,
+          this.pathKey!,
+          this.PathEnvVariable!,
+        );
+      }
       return updated;
     } catch (error) {
       if (error.meta?.cause) {
@@ -140,6 +180,13 @@ export abstract class AbstractRepo<
       const deleted = await this.delegate.delete(args);
       if (!deleted) {
         throw new HttpException('Entity Not found', 404);
+      }
+      if (this.pathKey && this.PathEnvVariable) {
+        return addCorrectPathToObject(
+          deleted,
+          this.pathKey!,
+          this.PathEnvVariable!,
+        );
       }
       return deleted;
     } catch (error) {

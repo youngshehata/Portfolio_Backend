@@ -19,12 +19,13 @@ model Errors {
 }
 
 model skills {
-  id              Int      @id @default(autoincrement())
-  name            String   @db.VarChar(2000)
-  icon            String   @default("default.svg") @db.VarChar(2000)
-  showOnPortfolio Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(2000)
+  icon            String            @default("default.svg") @db.VarChar(2000)
+  showOnPortfolio Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Projects_Skills Projects_Skills[]
 }
 
 model Logs {
@@ -58,4 +59,30 @@ model Contacts {
   icon          String? @db.VarChar(500)
   showOnContact Boolean @default(false)
   showOnHome    Boolean @default(false)
+}
+
+model Projects {
+  id              Int               @id @default(autoincrement()) @db.SmallInt
+  name            String            @db.VarChar(500)
+  overview        String?           @db.VarChar
+  url             String?           @db.VarChar(1000)
+  github          String?           @db.VarChar(1000)
+  Projects_Images Projects_Images[]
+  Projects_Skills Projects_Skills[]
+}
+
+model Projects_Images {
+  id       Int      @id @default(autoincrement()) @db.SmallInt
+  project  Int      @db.SmallInt
+  path     String   @db.VarChar(500)
+  order    Int      @default(1) @db.SmallInt
+  Projects Projects @relation(fields: [project], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ProjectImages_Projects_FK")
+}
+
+model Projects_Skills {
+  id       Int      @id @default(autoincrement()) @db.SmallInt
+  project  Int      @db.SmallInt
+  skill    Int      @db.SmallInt
+  Projects Projects @relation(fields: [project], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ProjectSkill_Project_FK")
+  skills   skills   @relation(fields: [skill], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ProjectSkill_Skill_FK")
 }
