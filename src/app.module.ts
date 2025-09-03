@@ -22,6 +22,7 @@ import { ExperiencesModule } from './features/experiences/experiences.module';
     ContactsModule,
     ProjectsModule,
     ExperiencesModule,
+    //
   ],
   controllers: [AppController],
   providers: [
