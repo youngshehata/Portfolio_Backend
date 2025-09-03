@@ -6,6 +6,8 @@ import {
   DEFAULT_PAGE_NUMBER,
   DEFAULT_PAGE_SIZE,
 } from '@common/constraints/constraints.common';
+import { DurationSearchDto } from './dtos/duration-search.dto';
+import { setDateToMax, setDateToMin } from '@common/helpers/format-date';
 
 @Injectable()
 export class LogsService implements OnModuleInit {
@@ -44,7 +46,7 @@ export class LogsService implements OnModuleInit {
   }
 
   //! ================================================= Find Many =================================================
-  async findMany(query: PaginationFilter) {
+  async findMany(query: DurationSearchDto) {
     let typeID: number | undefined = undefined;
     if (query.type) {
       const type = await this.prisma.logs_Types.findFirst({
@@ -60,6 +62,10 @@ export class LogsService implements OnModuleInit {
     const data = await this.prisma.logs.findMany({
       where: {
         type: typeID ? typeID : undefined,
+        ...(query.startDate && {
+          date: { gte: setDateToMin(query.startDate) },
+        }),
+        ...(query.endDate && { date: { lte: setDateToMax(query.endDate) } }),
       },
       orderBy: {
         date:
