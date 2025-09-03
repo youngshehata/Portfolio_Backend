@@ -93,3 +93,12 @@ model Experiences {
   solution  String  @db.VarChar
   visible   Boolean @default(true)
 }
+
+model Messages {
+  id      Int      @id @default(autoincrement())
+  title   String   @db.VarChar(1000)
+  from    String   @db.VarChar(500)
+  message String   @db.VarChar(20000)
+  date    DateTime @default(now()) @db.Timestamp(6)
+  isRead  Boolean  @default(false)
+}

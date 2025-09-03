@@ -12,6 +12,7 @@ import { LogAndFormatInterceptor } from '@common/interceptors/logAndFormat-inter
 import { ContactsModule } from './features/contacts/contacts.module';
 import { ProjectsModule } from './features/projects/projects.module';
 import { ExperiencesModule } from './features/experiences/experiences.module';
+import { MessagesModule } from './features/messages/messages.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ExperiencesModule } from './features/experiences/experiences.module';
     ContactsModule,
     ProjectsModule,
     ExperiencesModule,
-    //
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [

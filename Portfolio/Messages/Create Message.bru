@@ -1,0 +1,23 @@
+meta {
+  name: Create Message
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/messages
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "from": "omar ahmed shehata",
+    "title": "laptop wont open",
+    "message": "gotta play minecraft man"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
