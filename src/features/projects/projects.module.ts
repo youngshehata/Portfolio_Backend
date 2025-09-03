@@ -6,6 +6,8 @@ import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
 import { SkillsModule } from '../skills/skills.module';
 import { ProjectsImagesRepo } from './projects-images.repo';
+import { ProjectsSkillsRepo } from './projects-skills.repo';
+import { LogsService } from '../logs/logs.service';
 
 @Module({
   imports: [SkillsModule],
@@ -15,7 +17,9 @@ import { ProjectsImagesRepo } from './projects-images.repo';
     PrismaService,
     ProjectsRepo,
     ProjectsImagesRepo,
+    ProjectsSkillsRepo,
     UploadService,
+    LogsService,
   ],
 })
 export class ProjectsModule {}

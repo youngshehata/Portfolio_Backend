@@ -1,18 +1,18 @@
 meta {
-  name: Find Many
+  name: Find Skills
   type: http
-  seq: 4
+  seq: 6
 }
 
 get {
-  url: http://localhost:3000/projects/many?page=1&pageSize=10
+  url: http://localhost:3000/projects/skills/3?page=1&pageSize=1
   body: json
   auth: inherit
 }
 
 params:query {
   page: 1
-  pageSize: 10
+  pageSize: 1
 }
 
 settings {

@@ -1,18 +1,18 @@
 meta {
-  name: Find Many
+  name: Find Images
   type: http
-  seq: 4
+  seq: 8
 }
 
 get {
-  url: http://localhost:3000/projects/many?page=1&pageSize=10
+  url: http://localhost:3000/projects/images/3?page=1&pageSize=2
   body: json
   auth: inherit
 }
 
 params:query {
   page: 1
-  pageSize: 10
+  pageSize: 2
 }
 
 settings {

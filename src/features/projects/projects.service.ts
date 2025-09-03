@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  OnModuleInit,
-} from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { PaginationFilter } from '@common/types/pagination.dto';
 import { ProjectsRepo } from './projects.repo';
 import { CreateProjectDto, UpdateProjectDto } from './dtos/project.dto';
@@ -11,15 +6,20 @@ import { ProjectSkillDto } from './dtos/project-skill.dto';
 import { SkillsService } from '../skills/skills.service';
 import { UploadService } from '@common/services/upload.service';
 import { ProjectsImagesRepo } from './projects-images.repo';
-import { of } from 'rxjs';
+import { ProjectsSkillsRepo } from './projects-skills.repo';
+import { rm } from 'fs/promises';
+import { PROJECTS_IMAGES_PATH } from '@common/constraints/images.paths';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private readonly projectRepo: ProjectsRepo,
     private readonly projectsImagesRepo: ProjectsImagesRepo,
+    private readonly projectsSkillsRepo: ProjectsSkillsRepo,
     private readonly skillsService: SkillsService,
     private readonly uploadService: UploadService,
+    private readonly loggingService: LogsService,
   ) {}
 
   //! ================================================= Find Many =================================================
@@ -37,10 +37,24 @@ export class ProjectsService {
     return data;
   }
   //! ======================================== Find SKILLS FOR PROJECT =====================================
-  async findSkills(id: number) {
+  async findSkills(id: number, query: PaginationFilter) {
     const projectExists = await this.projectRepo.findOne({ where: { id } });
     if (!projectExists) throw new BadRequestException('Project does not exist');
-    return await this.projectRepo.getSkills(id);
+    return await this.projectsSkillsRepo.findMany(
+      { where: { project: id } },
+      query.pageSize,
+      query.page,
+    );
+  }
+  //! ======================================== Find IMAGES FOR PROJECT =====================================
+  async findImages(id: number, query: PaginationFilter) {
+    const projectExists = await this.projectRepo.findOne({ where: { id } });
+    if (!projectExists) throw new BadRequestException('Project does not exist');
+    return await this.projectsImagesRepo.findMany(
+      { where: { project: id } },
+      query.pageSize,
+      query.page,
+    );
   }
 
   //! ================================================= CREATE =================================================
@@ -80,9 +94,24 @@ export class ProjectsService {
     return updatedProject;
   }
 
-  //! ================================================= DELETE =================================================
+  //! ================================================= DELETE PROJECT =================================================
   async delete(id: number) {
-    return await this.projectRepo.delete({ where: { id } });
+    const deleted = await this.projectRepo.delete({ where: { id } });
+    if (deleted) {
+      try {
+        await rm(
+          `${process.cwd()}/public${PROJECTS_IMAGES_PATH}${deleted.id}`,
+          { recursive: true, force: true },
+        );
+      } catch (error) {
+        console.log(error);
+        this.loggingService.createLog(
+          `Error deleting project images folder, project id = ${deleted.id} - error message = ${error.message}`,
+          'ERROR',
+        );
+      }
+    }
+    return deleted;
   }
 
   //! =============================================  UPLOAD IMAGE  ================================================
@@ -102,7 +131,7 @@ export class ProjectsService {
     const uploaded = await this.uploadService.uploadFile(
       file,
       'Image',
-      'projects',
+      `projects/${id}/`,
       null,
       'Image',
     );
@@ -114,9 +143,49 @@ export class ProjectsService {
       data: {
         path: uploaded,
         project: id,
-        order: maxOrder ? maxOrder + 1 : undefined,
+        order: maxOrder ? maxOrder + 1 : 1,
       },
     });
     return created;
+  }
+
+  //! =============================================  CHANGE IMAGE ORDER  ================================================
+  async changeImageOrder(imageID: number, type: string) {
+    const image = await this.projectsImagesRepo.findOne({
+      where: { id: imageID },
+    });
+    if (!image) {
+      throw new HttpException('Invalid image id', 400);
+    }
+    if (!type || (type !== 'increase' && type !== 'decrease')) {
+      throw new HttpException('type is required (increase or decrease)', 400);
+    }
+    const adjacentImage = await this.projectsImagesRepo.findMany({
+      where: {
+        project: image.project,
+        order: type === 'increase' ? image.order + 1 : image.order - 1,
+      },
+    });
+    if (!adjacentImage) {
+      return await this.projectsImagesRepo.updateOne({
+        where: { id: imageID },
+        data: {
+          order: type === 'increase' ? image.order + 1 : image.order - 1,
+        },
+      });
+    }
+
+    await this.projectsImagesRepo.updateOne({
+      where: { id: adjacentImage[0].id },
+      data: {
+        order: image.order,
+      },
+    });
+    return await this.projectsImagesRepo.updateOne({
+      where: { id: imageID },
+      data: {
+        order: adjacentImage[0].order,
+      },
+    });
   }
 }

@@ -4,8 +4,8 @@ meta {
   seq: 9
 }
 
-put {
-  url: http://localhost:3000/projects/image/2
+post {
+  url: http://localhost:3000/projects/image/9
   body: multipartForm
   auth: inherit
 }
@@ -18,7 +18,7 @@ body:json {
 }
 
 body:multipart-form {
-  file: @file(D:\Work\Pics\4K-Drink-Mojito-Desktop-Wallpaper.jpg)
+  file: @file(D:\Work\Pics\13123.jpg)
 }
 
 settings {

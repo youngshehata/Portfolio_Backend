@@ -1,0 +1,24 @@
+meta {
+  name: Create Project
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/projects
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"POS",
+    "overview":"Point Of Sale application built using MERN stack",
+    "url":"https://pos.com",
+    "github":"https://git.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

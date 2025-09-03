@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -36,9 +35,9 @@ export class ProjectsController {
   }
   //! ====================================== FIND SKILLS FOR PROJECT ==========================================
   @Get('/skills/:id')
-  async findSkills(@Param('id') id: string) {
+  async findSkills(@Param('id') id: string, @Query() query: PaginationFilter) {
     if (!id) throw new HttpException('id is required', 400);
-    return await this.projectsService.findSkills(+id);
+    return await this.projectsService.findSkills(+id, query);
   }
 
   //! ================================================= CREATE =================================================
@@ -73,12 +72,30 @@ export class ProjectsController {
   }
 
   //! =========================================== UPLOAD IMAGE ==============================================
-  @Put('image/:id')
+  @Post('image/:id')
   @UseInterceptors(FileInterceptor('file', multerValidations.images))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,
   ) {
     return await this.projectsService.uploadImage(file, +id);
+  }
+
+  //! ====================================== FIND IMAGES FOR PROJECT ==========================================
+  @Get('/images/:id')
+  async findImages(@Param('id') id: string, @Query() query: PaginationFilter) {
+    if (!id) throw new HttpException('id is required', 400);
+    return await this.projectsService.findImages(+id, query);
+  }
+
+  //! ======================================== CHANGE IMAGE ORDER ==========================================
+  @Patch('imageorder/:id')
+  async changeImageOrder(
+    @Param('id') imageID: string,
+    @Query('type') type: string,
+  ) {
+    if (!type || (type !== 'increase' && type !== 'decrease'))
+      throw new HttpException('type is required (increase or decrease)', 400);
+    return await this.projectsService.changeImageOrder(+imageID, type);
   }
 }
