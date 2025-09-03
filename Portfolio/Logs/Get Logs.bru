@@ -1,0 +1,22 @@
+meta {
+  name: Get Logs
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/logs?pageSize=20&page=1&sort=newest
+  body: none
+  auth: inherit
+}
+
+params:query {
+  pageSize: 20
+  page: 1
+  sort: newest
+  ~type: SYSTEM
+}
+
+settings {
+  encodeUrl: true
+}

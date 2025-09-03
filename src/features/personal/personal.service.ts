@@ -35,6 +35,8 @@ export class PersonalService implements OnModuleInit {
     const alreadySeeded = await this.personalRepo.findMany({}, 10, 1);
     if (alreadySeeded.length === 0) {
       await this.personalRepo.create({ data: defaultPersonalData });
+    } else {
+      return true;
     }
     await this.loggingService.createLog(
       'Default personal data were successfully seeded',
