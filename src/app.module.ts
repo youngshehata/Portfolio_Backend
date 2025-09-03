@@ -11,6 +11,7 @@ import { UploadService } from '@common/services/upload.service';
 import { LogAndFormatInterceptor } from '@common/interceptors/logAndFormat-interceptor/logAndFormat.interceptor';
 import { ContactsModule } from './features/contacts/contacts.module';
 import { ProjectsModule } from './features/projects/projects.module';
+import { ExperiencesModule } from './features/experiences/experiences.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProjectsModule } from './features/projects/projects.module';
     PersonalModule,
     ContactsModule,
     ProjectsModule,
+    ExperiencesModule,
   ],
   controllers: [AppController],
   providers: [
