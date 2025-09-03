@@ -37,7 +37,7 @@ export abstract class AbstractRepo<
         skip: Number((pageNumber - 1) * pageSize),
       });
       if (this.pathKey && this.PathEnvVariable) {
-        data.map((entity) =>
+        data.map((entity: any) =>
           addCorrectPathToObject(entity, this.pathKey!, this.PathEnvVariable!),
         );
       }

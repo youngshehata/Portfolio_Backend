@@ -10,7 +10,20 @@ export class MessagesService {
   //! ================================================= Find Many =================================================
   async findMany(query: PaginationFilter) {
     const data = await this.messageRepo.findMany(
-      {},
+      {
+        where: {
+          isRead:
+            query.isRead === 0 ? false : query.isRead === 1 ? true : undefined,
+        },
+        orderBy: {
+          date:
+            query.sort === 'newest'
+              ? 'desc'
+              : query.sort === 'oldest'
+                ? 'asc'
+                : undefined,
+        },
+      },
       query.pageSize,
       query.page,
     );

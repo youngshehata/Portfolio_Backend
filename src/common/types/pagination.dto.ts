@@ -1,4 +1,4 @@
-import { IsOptional, IsPositive } from 'class-validator';
+import { IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaginationFilter {
@@ -11,4 +11,13 @@ export class PaginationFilter {
   @Type(() => Number)
   @IsPositive()
   pageSize?: number;
+
+  @IsOptional()
+  @IsString()
+  sort?: 'newest' | 'oldest';
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  isRead?: 0 | 1;
 }
