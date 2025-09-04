@@ -1,0 +1,15 @@
+meta {
+  name: Logout
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/auth/logout
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
