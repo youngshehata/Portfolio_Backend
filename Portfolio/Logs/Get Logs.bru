@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: http://localhost:3000/logs?pageSize=20&page=1&sort=newest&startDate=9-3-2025
+  url: http://localhost:3000/logs?pageSize=20&page=1&startDate=9-3-2025
   body: none
   auth: inherit
 }
@@ -13,9 +13,10 @@ get {
 params:query {
   pageSize: 20
   page: 1
-  sort: newest
   startDate: 9-3-2025
+  ~sort: newest
   ~type: SYSTEM
+  ~endDate: 8-28-2025
 }
 
 settings {
