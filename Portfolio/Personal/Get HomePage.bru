@@ -1,0 +1,15 @@
+meta {
+  name: Get HomePage
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/personal/homepage
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

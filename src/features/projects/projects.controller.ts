@@ -17,23 +17,27 @@ import { PaginationFilter } from '@common/types/pagination.dto';
 import { ProjectSkillDto } from './dtos/project-skill.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   //! ================================================= FIND MANY =================================================
+  @Public()
   @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
     return await this.projectsService.findMany(query);
   }
   //! ================================================= FIND ONE =================================================
+  @Public()
   @Get('/one/:id')
   async findOne(@Param('id') id: string) {
     if (!id) throw new HttpException('id is required', 400);
     return await this.projectsService.findOne(+id);
   }
   //! ====================================== FIND SKILLS FOR PROJECT ==========================================
+  @Public()
   @Get('/skills/:id')
   async findSkills(@Param('id') id: string, @Query() query: PaginationFilter) {
     if (!id) throw new HttpException('id is required', 400);
@@ -82,6 +86,7 @@ export class ProjectsController {
   }
 
   //! ====================================== FIND IMAGES FOR PROJECT ==========================================
+  @Public()
   @Get('/images/:id')
   async findImages(@Param('id') id: string, @Query() query: PaginationFilter) {
     if (!id) throw new HttpException('id is required', 400);

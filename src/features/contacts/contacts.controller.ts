@@ -17,17 +17,20 @@ import { CreateContactDto, UpdateContactDto } from './dtos/contact.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
   //! ================================================= FIND MANY =================================================
+  @Public()
   @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
     return await this.contactsService.findMany(query);
   }
   //! ================================================= FIND ONE =================================================
+  @Public()
   @Get('/one/:id')
   async findOne(@Param('id') id: string) {
     if (!id) throw new HttpException('id is required', 400);

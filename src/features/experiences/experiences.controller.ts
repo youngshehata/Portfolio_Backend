@@ -15,17 +15,20 @@ import {
   UpdateExperienceDto,
 } from './dtos/experience.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('experiences')
 export class ExperiencesController {
   constructor(private readonly experiencesService: ExperiencesService) {}
 
   //! ================================================= FIND MANY =================================================
+  @Public()
   @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
     return await this.experiencesService.findMany(query);
   }
   //! ================================================= FIND ONE =================================================
+  @Public()
   @Get('/one/:id')
   async findOne(@Param('id') id: string) {
     if (!id) throw new HttpException('id is required', 400);

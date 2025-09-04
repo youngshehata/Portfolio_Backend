@@ -11,12 +11,20 @@ import { PersonalService } from './personal.service';
 import { PersonalUpdateDto } from './dtos/personal-update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('personal')
 export class PersonalController {
   constructor(private readonly personalService: PersonalService) {}
 
   //! ================= GET PERSONAL DATA =================
+  @Public()
+  @Get('homepage')
+  async getHomePage() {
+    return await this.personalService.getHomePage();
+  }
+  //! ================= GET PERSONAL DATA =================
+  @Public()
   @Get('data')
   async getPersonalData() {
     return await this.personalService.getPersonalData();

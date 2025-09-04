@@ -50,6 +50,11 @@ export class PersonalService implements OnModuleInit {
     return await this.personalRepo.getPersonalData();
   }
 
+  //! ================= GET HOME PAGE =================
+  async getHomePage() {
+    return await this.personalRepo.getHomePage();
+  }
+
   //! ================= UPDATE PERSONAL DATA =================
   async editPersonalData(data: PersonalUpdateDto) {
     return await this.personalRepo.updateOne({ where: { id: 1 }, data });

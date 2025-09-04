@@ -17,17 +17,20 @@ import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('skills')
 export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   //! ================================================= FIND MANY =================================================
+  @Public()
   @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
     return await this.skillsService.findMany(query);
   }
   //! ================================================= FIND ONE =================================================
+  @Public()
   @Get('/one/:id')
   async findOne(@Param('id') id: string) {
     if (!id) throw new HttpException('id is required', 400);

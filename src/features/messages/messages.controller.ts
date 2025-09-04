@@ -12,6 +12,7 @@ import {
 import { MessagesService } from './messages.service';
 import { CreateMessageDto, UpdateMessageDto } from './dtos/message.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
+import { Public } from '@common/decorators/public.decorator';
 
 @Controller('messages')
 export class MessagesController {
@@ -29,6 +30,7 @@ export class MessagesController {
     return await this.messagesService.findOne(+id);
   }
   //! ================================================= CREATE =================================================
+  @Public()
   @Post()
   async create(@Body() data: CreateMessageDto) {
     return await this.messagesService.create(data);

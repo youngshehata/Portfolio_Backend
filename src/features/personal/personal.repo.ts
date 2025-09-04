@@ -1,4 +1,10 @@
 import { AbstractRepo } from '@common/abstracts/abstract.repo';
+import {
+  CONTACTS_IMAGES_PATH,
+  PERSONAL_IMAGES_PATH,
+  SKILLS_IMAGES_PATH,
+} from '@common/constraints/images.paths';
+import { addCorrectPathToObject } from '@common/helpers/add-correct-path';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 
@@ -12,5 +18,41 @@ export class PersonalRepo extends AbstractRepo<PrismaService['personal']> {
   async getPersonalData() {
     const data = await this.findMany({}, 10, 1);
     return data[0];
+  }
+
+  //! ================= GET HOME PAGE =================
+  async getHomePage() {
+    // ============> Personal Data
+    const personal = await this.getPersonalData();
+    const withCorrectImage = addCorrectPathToObject(
+      personal,
+      'image',
+      PERSONAL_IMAGES_PATH,
+    );
+    const withCorrectPDF = addCorrectPathToObject(
+      withCorrectImage,
+      'cv',
+      PERSONAL_IMAGES_PATH,
+    );
+
+    // ========================> Skills
+    const skills = await this.prisma.skills.findMany({
+      where: { showOnPortfolio: true },
+    });
+
+    // ========================> Contacts
+    const contacts = await this.prisma.contacts.findMany({
+      where: { showOnHome: true },
+    });
+
+    return {
+      personal: withCorrectPDF,
+      skills: skills.map((skill) => {
+        return addCorrectPathToObject(skill, 'icon', SKILLS_IMAGES_PATH);
+      }),
+      contacts: contacts.map((contact) => {
+        return addCorrectPathToObject(contact, 'icon', CONTACTS_IMAGES_PATH);
+      }),
+    };
   }
 }
