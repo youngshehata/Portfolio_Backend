@@ -14,6 +14,8 @@ import { ExperiencesModule } from './features/experiences/experiences.module';
 import { MessagesModule } from './features/messages/messages.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,6 +27,9 @@ import { AuthGuard } from './auth/guards/auth.guard';
     ExperiencesModule,
     MessagesModule,
     AuthModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'public'),
+    }),
   ],
   controllers: [AppController],
   providers: [

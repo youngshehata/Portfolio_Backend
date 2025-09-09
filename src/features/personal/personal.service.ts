@@ -5,6 +5,7 @@ import { defaultPersonalData } from './helpers/default-personal-data';
 import { PersonalUpdateDto } from './dtos/personal-update.dto';
 import { LogsService } from '../logs/logs.service';
 import { UploadService } from '@common/services/upload.service';
+import * as path from 'path';
 
 @Injectable()
 export class PersonalService implements OnModuleInit {
@@ -89,5 +90,14 @@ export class PersonalService implements OnModuleInit {
       where: { id: 1 },
       data: { image: uploaded },
     });
+  }
+
+  //! ================= DOWNLOAD CV =================
+  async getCvPath() {
+    const data = (await this.getPersonalData()).cv;
+    const filePath = path.join(process.cwd(), 'public/personal', data);
+    console.log(filePath);
+
+    return filePath;
   }
 }

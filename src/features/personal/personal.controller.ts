@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Put,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { PersonalUpdateDto } from './dtos/personal-update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
 import { Public } from '@common/decorators/public.decorator';
+import { Response } from 'express';
 
 @Controller('personal')
 export class PersonalController {
@@ -48,5 +50,13 @@ export class PersonalController {
   @UseInterceptors(FileInterceptor('file', multerValidations.images))
   async editImage(@UploadedFile() file: Express.Multer.File) {
     return await this.personalService.editImage(file);
+  }
+
+  //! ================= DOWNLOAD CV =================
+  @Public()
+  @Get('cv')
+  async downloadCV(@Res() res: Response) {
+    const path = await this.personalService.getCvPath();
+    return res.download(path);
   }
 }
