@@ -31,7 +31,7 @@ export const initializeSessions = (app: any) => {
       }),
     );
   } catch (error) {
-    console.log(`Error initializing sessions.`.bgRed.white.bold);
+    console.log(`Error initializing sessions.`);
     console.log(error);
     process.exit(1);
   }

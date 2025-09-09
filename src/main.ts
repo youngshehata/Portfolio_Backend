@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import 'colors';
 import { GlobalExceptionsRecorderFilter } from './common/filters/global-exceptions-recorder.filter';
 import { PrismaService } from 'prisma/prisma.service';
 import { ValidationPipe } from '@nestjs/common';
@@ -11,9 +10,7 @@ async function bootstrap() {
   //! Password is a must , therefore it should be set
   const password = process.env.PASSWORD;
   if (!password) {
-    console.log(
-      `Please set the 'PASSWORD' environment variable.`.bgRed.white.bold,
-    );
+    console.log(`Please set the 'PASSWORD' environment variable.`);
     process.exit(1);
   }
 
@@ -34,6 +31,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  //! CORS
+  app.enableCors({ origin: process.env.CORS_ORIGIN, credentials: true });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
