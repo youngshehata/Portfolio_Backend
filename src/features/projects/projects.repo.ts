@@ -2,13 +2,35 @@ import { AbstractRepo } from '@common/abstracts/abstract.repo';
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { ProjectSkillDto } from './dtos/project-skill.dto';
-import { deleteMultipleFiles } from '@common/helpers/delete-multiple-files';
-import { PROJECTS_IMAGES_PATH } from '@common/constraints/images.paths';
+import { PaginationFilter } from '@common/types/pagination.dto';
 
 @Injectable()
 export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
   constructor(private readonly prisma: PrismaService) {
     super(prisma.projects);
+  }
+
+  //! ================= GET ORDERS WITH IMAGES AND SKILLS ========================
+  async findManyProjects(query: PaginationFilter) {
+    const data = await this.prisma.projects.findMany({
+      include: {
+        Projects_Images: { select: { path: true } },
+        Projects_Skills: {
+          select: { skills: { select: { name: true, icon: true } } },
+        },
+      },
+    });
+    const formatted = data.map((project) => {
+      return {
+        ...project,
+        images: project.Projects_Images.map((image) => image.path),
+        skills: project.Projects_Skills.map((skill) => skill.skills),
+        Projects_Skills: undefined,
+        Projects_Images: undefined,
+      };
+    });
+
+    return formatted;
   }
 
   //! ================= GET SKILLS FOR A PROJECT =================

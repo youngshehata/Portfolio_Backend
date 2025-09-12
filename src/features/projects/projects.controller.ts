@@ -27,7 +27,7 @@ export class ProjectsController {
   @Public()
   @Get('/many')
   async findMany(@Query() query: PaginationFilter) {
-    return await this.projectsService.findMany(query);
+    return await this.projectsService.findManyProjects(query);
   }
   //! ================================================= FIND ONE =================================================
   @Public()

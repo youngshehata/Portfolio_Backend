@@ -22,13 +22,18 @@ export class ProjectsService {
     private readonly loggingService: LogsService,
   ) {}
 
-  //! ================================================= Find Many =================================================
-  async findMany(query: PaginationFilter) {
-    const data = await this.projectRepo.findMany(
-      {},
-      query.pageSize,
-      query.page,
-    );
+  // //! ================================================= Find Many =================================================
+  // async findMany(query: PaginationFilter) {
+  //   const data = await this.projectRepo.findMany(
+  //     {},
+  //     query.pageSize,
+  //     query.page,
+  //   );
+  //   return data;
+  // }
+  //! ============================================= Find Many Projects ==============================================
+  async findManyProjects(query: PaginationFilter) {
+    const data = await this.projectRepo.findManyProjects(query);
     return data;
   }
   //! ================================================= Find One =================================================
