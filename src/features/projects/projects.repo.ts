@@ -3,6 +3,11 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { ProjectSkillDto } from './dtos/project-skill.dto';
 import { PaginationFilter } from '@common/types/pagination.dto';
+import { addCorrectPathToObject } from '@common/helpers/add-correct-path';
+import {
+  PROJECTS_IMAGES_PATH,
+  SKILLS_IMAGES_PATH,
+} from '@common/constraints/images.paths';
 
 @Injectable()
 export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
@@ -23,8 +28,12 @@ export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
     const formatted = data.map((project) => {
       return {
         ...project,
-        images: project.Projects_Images.map((image) => image.path),
-        skills: project.Projects_Skills.map((skill) => skill.skills),
+        images: project.Projects_Images.map(
+          (image) => `${PROJECTS_IMAGES_PATH}${image.path}`,
+        ),
+        skills: project.Projects_Skills.map((skill) =>
+          addCorrectPathToObject(skill.skills, 'icon', SKILLS_IMAGES_PATH),
+        ),
         Projects_Skills: undefined,
         Projects_Images: undefined,
       };

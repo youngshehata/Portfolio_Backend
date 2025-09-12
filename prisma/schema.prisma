@@ -30,7 +30,7 @@ model skills {
 
 model Logs {
   id         Int        @id @default(autoincrement())
-  log        String     @db.VarChar(5000)
+  log        String     @db.VarChar
   type       Int        @db.SmallInt
   date       DateTime   @default(now()) @db.Timestamp(6)
   ip         String?    @db.VarChar(100)
