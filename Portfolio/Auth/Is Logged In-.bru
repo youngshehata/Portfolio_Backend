@@ -1,0 +1,21 @@
+meta {
+  name: Is Logged In?
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/auth/logged
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "password":"justrandompassword"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

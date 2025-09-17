@@ -15,4 +15,8 @@ export class AuthService {
     session.destroy();
     return 'Logged out successfully';
   }
+
+  isLoggedIn(session: Record<string, any>) {
+    return session.isOwner;
+  }
 }

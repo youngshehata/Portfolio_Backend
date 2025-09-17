@@ -8,6 +8,7 @@ import {
   PROJECTS_IMAGES_PATH,
   SKILLS_IMAGES_PATH,
 } from '@common/constraints/images.paths';
+import { DEFAULT_PAGE_SIZE } from '@common/constraints/constraints.common';
 
 @Injectable()
 export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
@@ -18,6 +19,8 @@ export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
   //! ================= GET ORDERS WITH IMAGES AND SKILLS ========================
   async findManyProjects(query: PaginationFilter) {
     const data = await this.prisma.projects.findMany({
+      take: Number(query.pageSize || DEFAULT_PAGE_SIZE),
+      skip: Number((query.page || 1) - 1) * Number(query.pageSize || 1),
       include: {
         Projects_Images: { select: { path: true } },
         Projects_Skills: {
@@ -38,8 +41,9 @@ export class ProjectsRepo extends AbstractRepo<PrismaService['projects']> {
         Projects_Images: undefined,
       };
     });
+    const totalResults = await this.prisma.projects.count();
 
-    return formatted;
+    return { data: formatted, totalResults };
   }
 
   //! ================= GET SKILLS FOR A PROJECT =================

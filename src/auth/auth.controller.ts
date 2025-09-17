@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Session } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Session,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from '@common/decorators/public.decorator';
 
@@ -18,5 +25,12 @@ export class AuthController {
   @Post('logout')
   logout(@Session() session: Record<string, any>) {
     return this.authService.logout(session);
+  }
+
+  @Get('logged')
+  isLoggedIn(@Session() session: Record<string, any>) {
+    const loggedIn = this.authService.isLoggedIn(session);
+    if (!loggedIn) throw new UnauthorizedException('Not logged in');
+    return true;
   }
 }

@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
   IsBoolean,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -19,6 +20,7 @@ export class CreateMessageDto {
   @IsString()
   @MinLength(2)
   @MaxLength(500)
+  @IsEmail()
   from: string;
 
   @IsNotEmpty()

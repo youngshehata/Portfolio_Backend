@@ -21,7 +21,7 @@ export class GlobalExceptionsRecorderFilter implements ExceptionFilter {
     let errorId = 'Undefined';
 
     if (status === 500) {
-      // Create a new record in the errors table
+      // Log error to DB
       const errorRecord = await this.prisma.errors.create({
         data: {
           message: (exception as Error).message,
@@ -33,18 +33,28 @@ export class GlobalExceptionsRecorderFilter implements ExceptionFilter {
         },
       });
       errorId = errorRecord.id.toString();
-      // log it to console as well
-      console.log(errorRecord);
+
+      console.error(errorRecord);
 
       const serverResponse: TResponse = {
         data: null,
         message: (exception as Error).message,
         statusCode: status,
       };
-      return response.status(status).send(serverResponse);
+
+      // ✅ Check before sending
+      if (!response.headersSent) {
+        response.status(status).send(serverResponse);
+      } else {
+        // optional: just log if already sent
+        console.warn(
+          `Headers already sent for ${request.url}. Skipping error response.`,
+        );
+      }
+      return;
     } else {
       const isClassValidatorError = classValidatorFormatter(exception);
-      if (isClassValidatorError) {
+      if (isClassValidatorError && !response.headersSent) {
         return response.status(status).send(isClassValidatorError);
       }
 
@@ -53,7 +63,15 @@ export class GlobalExceptionsRecorderFilter implements ExceptionFilter {
         message: (exception as Error).message,
         statusCode: status,
       };
-      return response.status(status).send(serverResponse);
+
+      // ✅ Check before sending
+      if (!response.headersSent) {
+        response.status(status).send(serverResponse);
+      } else {
+        console.warn(
+          `Headers already sent for ${request.url}. Skipping error response.`,
+        );
+      }
     }
   }
 }

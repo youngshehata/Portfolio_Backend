@@ -17,7 +17,9 @@ export class ExperiencesService {
       query.pageSize,
       query.page,
     );
-    return data;
+    // return data;
+    const totalResults = await this.experienceRepo.getCount();
+    return { data, totalResults };
   }
   //! ================================================= Find One =================================================
   async findOne(id: number) {
