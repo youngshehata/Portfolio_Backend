@@ -13,7 +13,7 @@ export class ContactsService implements OnModuleInit {
     const data = await seederToData<CreateContactDto>('contacts');
     // Check if contacts already seeded
     const existing = await this.contactRepo.findMany();
-    if (existing.length === 0) {
+    if (existing.data.length === 0) {
       console.log(`Seeding ${data.length} contacts...`);
 
       // Insert all records

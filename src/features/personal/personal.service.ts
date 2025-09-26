@@ -24,7 +24,7 @@ export class PersonalService implements OnModuleInit {
   //! ================= VALIDATE PERSONAL TABLE HAS ONLY ONE RECORD =================
   async validatePersonal() {
     const data = await this.personalRepo.findMany({}, 10, 1);
-    if (data.length > 1) {
+    if (data.data.length > 1) {
       logInvalidPersonalData();
       process.exit();
     }
@@ -34,7 +34,7 @@ export class PersonalService implements OnModuleInit {
   //! ================= SEED DEFAULT PERSONAL =================
   async seedDefaultPersonalData() {
     const alreadySeeded = await this.personalRepo.findMany({}, 10, 1);
-    if (alreadySeeded.length === 0) {
+    if (alreadySeeded.data.length === 0) {
       await this.personalRepo.create({ data: defaultPersonalData });
     } else {
       return true;

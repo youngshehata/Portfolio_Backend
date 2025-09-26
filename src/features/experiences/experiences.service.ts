@@ -18,8 +18,8 @@ export class ExperiencesService {
       query.page,
     );
     // return data;
-    const totalResults = await this.experienceRepo.getCount();
-    return { data, totalResults };
+
+    return data;
   }
   //! ================================================= Find One =================================================
   async findOne(id: number) {

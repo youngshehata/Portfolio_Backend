@@ -14,10 +14,10 @@ import {
 } from '@nestjs/common';
 import { SkillsService } from './skills.service';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
-import { PaginationFilter } from '@common/types/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
 import { Public } from '@common/decorators/public.decorator';
+import { SkillsPaginationDto } from './dtos/skills.pagination.dto';
 
 @Controller('skills')
 export class SkillsController {
@@ -26,7 +26,7 @@ export class SkillsController {
   //! ================================================= FIND MANY =================================================
   @Public()
   @Get('/many')
-  async findMany(@Query() query: PaginationFilter) {
+  async findMany(@Query() query: SkillsPaginationDto) {
     return await this.skillsService.findMany(query);
   }
   //! ================================================= FIND ONE =================================================

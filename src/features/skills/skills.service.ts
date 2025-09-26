@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { SkillRepo } from './skills.repo';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { seederToData } from '@common/helpers/seeder-to-data';
-import { PaginationFilter } from '@common/types/pagination.dto';
+import { SkillsPaginationDto } from './dtos/skills.pagination.dto';
 
 @Injectable()
 export class SkillsService implements OnModuleInit {
@@ -13,7 +13,7 @@ export class SkillsService implements OnModuleInit {
     const data = await seederToData<CreateSkillDto>('skills');
     // Check if skills already seeded
     const existing = await this.skillRepo.findMany();
-    if (existing.length === 0) {
+    if (existing.data.length === 0) {
       console.log(`Seeding ${data.length} skills...`);
 
       // Insert all records
@@ -32,8 +32,18 @@ export class SkillsService implements OnModuleInit {
   }
 
   //! ================================================= Find Many =================================================
-  async findMany(query: PaginationFilter) {
-    const data = await this.skillRepo.findMany({}, query.pageSize, query.page);
+  async findMany(query: SkillsPaginationDto) {
+    const data = await this.skillRepo.findMany(
+      {
+        where: {
+          ...(query.showOnPortfolio !== undefined && {
+            showOnPortfolio: { equals: query.showOnPortfolio },
+          }),
+        },
+      },
+      query.pageSize,
+      query.page,
+    );
     return data;
   }
   //! ================================================= Find One =================================================

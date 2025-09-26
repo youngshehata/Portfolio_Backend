@@ -17,7 +17,7 @@ export class PersonalRepo extends AbstractRepo<PrismaService['personal']> {
   //! ================= GET PERSONAL DATA =================
   async getPersonalData() {
     const data = await this.findMany({}, 10, 1);
-    return addCorrectPathToObject(data[0], 'image', PERSONAL_IMAGES_PATH);
+    return addCorrectPathToObject(data.data[0], 'image', PERSONAL_IMAGES_PATH);
   }
 
   //! ================= GET HOME PAGE =================

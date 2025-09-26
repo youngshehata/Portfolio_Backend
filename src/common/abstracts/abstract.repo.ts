@@ -13,6 +13,7 @@ export abstract class AbstractRepo<
     update: (...args: any[]) => any;
     delete: (...args: any[]) => any;
     findUnique: (...args: any[]) => any;
+    count: (...args: any[]) => any;
   },
 > {
   constructor(
@@ -29,19 +30,29 @@ export abstract class AbstractRepo<
     args?: Parameters<TDelegate['findMany']>[0],
     pageSize: number = DEFAULT_PAGE_SIZE,
     pageNumber: number = DEFAULT_PAGE_NUMBER,
-  ): Promise<ReturnType<TDelegate['findMany']>> {
+  ): Promise<{
+    data: Awaited<ReturnType<TDelegate['findMany']>>;
+    totalCount: number;
+  }> {
     try {
-      const data = await this.delegate.findMany({
-        ...args,
-        take: Number(pageSize),
-        skip: Number((pageNumber - 1) * pageSize),
-      });
+      const where = args?.where;
+
+      const [data, totalCount] = await Promise.all([
+        this.delegate.findMany({
+          ...args,
+          take: Number(pageSize),
+          skip: Number((pageNumber - 1) * pageSize),
+        }),
+        this.delegate.count({ where }),
+      ]);
+
       if (this.pathKey && this.PathEnvVariable) {
-        data.map((entity: any) =>
+        data.forEach((entity: any) =>
           addCorrectPathToObject(entity, this.pathKey!, this.PathEnvVariable!),
         );
       }
-      return data;
+
+      return { data, totalCount };
     } catch (error) {
       if (error.meta?.cause) {
         throw new HttpException(error.meta.cause, 400);

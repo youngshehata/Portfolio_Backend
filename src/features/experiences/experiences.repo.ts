@@ -9,8 +9,4 @@ export class ExperiencesRepo extends AbstractRepo<
   constructor(private readonly prisma: PrismaService) {
     super(prisma.experiences);
   }
-
-  async getCount() {
-    return this.prisma.experiences.count();
-  }
 }
