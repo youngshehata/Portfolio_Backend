@@ -1,4 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -21,8 +22,13 @@ export class CreateSkillDto {
   @MaxLength(2000)
   icon?: string;
 
-  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
   @IsBoolean()
+  @IsOptional()
   showOnPortfolio?: boolean;
 }
 

@@ -5,7 +5,7 @@ meta {
 }
 
 put {
-  url: http://localhost:3000/skills/icon/33
+  url: http://localhost:3000/skills/icon/4
   body: multipartForm
   auth: inherit
 }
@@ -20,8 +20,9 @@ body:json {
 
 body:multipart-form {
   name: UpdatedName
-  file: @file(D:\Work\Pics\SVG-Background.svg)
   type: skills
+  showOnPortfolio: true
+  ~file: @file(D:\Work\Pics\SVG-Background.svg)
 }
 
 settings {

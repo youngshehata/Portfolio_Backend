@@ -18,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerValidations } from '@common/constraints/multer.options';
 import { Public } from '@common/decorators/public.decorator';
 import { SkillsPaginationDto } from './dtos/skills.pagination.dto';
+import { UpdateSkillWithIconDto } from './dtos/updateSkillWithIcon.dto';
 
 @Controller('skills')
 export class SkillsController {
@@ -61,13 +62,14 @@ export class SkillsController {
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
     @Body('type') type: string,
-    @Body() body: Omit<UpdateSkillDto, 'icon'>,
+    @Body() body: UpdateSkillWithIconDto,
   ) {
     const data: Record<string, any> = {};
     if (file) data.icon = file.filename;
     if (body.name) data.name = body.name;
-    if (typeof body.showOnPortfolio !== 'undefined')
+    if (typeof body.showOnPortfolio !== 'undefined') {
       data.showOnPortfolio = body.showOnPortfolio;
+    }
 
     const updated = await this.skillsService.updateWithIcon(
       {
