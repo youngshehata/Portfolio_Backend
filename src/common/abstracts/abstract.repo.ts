@@ -141,8 +141,6 @@ export abstract class AbstractRepo<
     imageSize?: 'Icon' | 'Image',
   ): Promise<ReturnType<TDelegate['update']>> {
     try {
-      console.log(args);
-
       if (!file) return await this.delegate.update(args);
 
       if (!type) {

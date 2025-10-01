@@ -3,6 +3,8 @@ import { SkillRepo } from './skills.repo';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { seederToData } from '@common/helpers/seeder-to-data';
 import { SkillsPaginationDto } from './dtos/skills.pagination.dto';
+import { addCorrectPathToObject } from '@common/helpers/add-correct-path';
+import { SKILLS_IMAGES_PATH } from '@common/constraints/images.paths';
 
 @Injectable()
 export class SkillsService implements OnModuleInit {
@@ -39,6 +41,10 @@ export class SkillsService implements OnModuleInit {
           ...(query.showOnPortfolio !== undefined && {
             showOnPortfolio: { equals: query.showOnPortfolio },
           }),
+
+          ...(query.search && {
+            name: { contains: query.search, mode: 'insensitive' },
+          }),
         },
       },
       query.pageSize,
@@ -72,7 +78,7 @@ export class SkillsService implements OnModuleInit {
       where: { id: args.where.id },
     });
 
-    const updated = await this.skillRepo.updateWithIcon(
+    let updated = await this.skillRepo.updateWithIcon(
       args,
       file,
       type,
@@ -80,6 +86,11 @@ export class SkillsService implements OnModuleInit {
       oldFileToDelete?.icon ? `${type}/${oldFileToDelete.icon}` : null,
       'Icon',
     );
+    if (!file) {
+      updated = addCorrectPathToObject(updated, 'icon', SKILLS_IMAGES_PATH);
+    }
+    console.log(updated);
+
     return updated;
   }
 
