@@ -89,7 +89,6 @@ export class SkillsService implements OnModuleInit {
     if (!file) {
       updated = addCorrectPathToObject(updated, 'icon', SKILLS_IMAGES_PATH);
     }
-    console.log(updated);
 
     return updated;
   }
