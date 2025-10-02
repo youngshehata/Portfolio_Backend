@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, Injectable, OnModuleInit } from '@nestjs/common';
 import { SkillRepo } from './skills.repo';
 import { CreateSkillDto, UpdateSkillDto } from './dtos/skill.dto';
 import { seederToData } from '@common/helpers/seeder-to-data';
@@ -96,6 +96,12 @@ export class SkillsService implements OnModuleInit {
 
   //! ================================================= DELETE =================================================
   async delete(id: number) {
-    return await this.skillRepo.delete({ where: { id } });
+    try {
+      return await this.skillRepo.delete({ where: { id } });
+    } catch (error) {
+      if (error.message.includes('constraint violated')) {
+        throw new HttpException('Some projects are using this skill', 400);
+      }
+    }
   }
 }
